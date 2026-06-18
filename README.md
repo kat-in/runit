@@ -8,7 +8,7 @@ Runit is an environment for writing and executing code that will be actively use
 
 Tasks:
 
-* Participation in service development
+* Participation in service development 
 
 Features (current and future):
 
