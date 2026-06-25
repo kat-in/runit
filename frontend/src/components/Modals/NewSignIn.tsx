@@ -27,11 +27,7 @@ function NewSignInModal({ handleClose, isOpen }) {
         blur: 3,
       }}
       radius="md"
-      styles={{
-        content: {
-          height: 'auto',
-        },
-      }}
+      size="md"
       title={
         <Title fw={700} order={3}>
           {signInText('header')}
@@ -62,10 +58,10 @@ function NewSignInModal({ handleClose, isOpen }) {
                 Icon === GithubIcon ? <Icon size={size} /> : <Component />
               }
               size="md"
+              // Стили нужны для корректного отображения Яндекс ID
               styles={{
                 label: {
                   whiteSpace: 'normal',
-                  textAlign: 'center',
                 },
               }}
               variant="default"
