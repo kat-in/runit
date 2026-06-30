@@ -28,7 +28,7 @@ function NewForgotPasswordForm() {
     setIsLoading(true);
 
     try {
-      // добавить функцию отправки email 
+      // TODO: добавить функцию отправки email 
       dispatch(actions.closeModal());
     } catch (error) {
       setSubmitError(t('errors.signInFailed'));
