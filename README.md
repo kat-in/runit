@@ -13,8 +13,6 @@ Runit — это среда для написания и выполнения к
 * Встраивание сниппетов на страницы
 * Совместное редактирование
 
-Задачи можно обсудить в канале [Telegram](https://t.me/hexletcommunity/12).
-
 ## Технологии
 
 * **Язык:** TypeScript
@@ -50,10 +48,6 @@ npm run start
 
 Структура API старого проекта находится [здесь](https://runit.hexlet.ru/api).
 
-## Как помочь проекту
-
-Посмотрите список [issue](https://github.com/hexlet-volunteers/runit/issues), выберите интересную задачу и напишите в issue, что хотите работать над ней.
-
 ## Полезные ссылки
 
 * [Гайдлайн по TS от Microsoft](https://github.com/microsoft/TypeScript/wiki/Coding-guidelines)
@@ -64,5 +58,3 @@ npm run start
 [![© ООО «Хекслет Рус» logo](https://raw.githubusercontent.com/Hexlet/assets/master/images/hexlet_logo128.png)](https://hexlet.io/?utm_source=github&utm_medium=link&utm_campaign=hexlet-editor)
 
 Этот репозиторий создаётся и поддерживается командой и сообществом © ООО «Хекслет Рус», образовательный проект. [Подробнее о Хекслете](https://hexlet.io/?utm_source=github&utm_medium=link&utm_campaign=hexlet-editor).
-
-См. самых активных участников на [hexlet-friends](https://friends.hexlet.io/).
