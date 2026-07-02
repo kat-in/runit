@@ -2,33 +2,32 @@
 
 [![On Push](https://github.com/hexlet-volunteers/runit/actions/workflows/push.yml/badge.svg?event=push)](https://github.com/hexlet-volunteers/runit/actions/workflows/push.yml)
 
-## About
+## Описание
 
-Runit is an environment for writing and executing code that is actively used across the Hexlet platforms. The closest counterpart is the repl.it service.
+Runit — это среда для написания и выполнения кода, которая активно используется на платформах © ООО «Хекслет Рус». Ближайший аналог — сервис repl.it.
 
-Features (current and future):
+Возможности (текущие и будущие):
 
-* Edit code online
-* Share code via link
-* Embed snippets in pages
-* Collaborative editing
+* Редактирование кода онлайн
+* Шаринг кода по ссылке
+* Встраивание сниппетов на страницы
+* Совместное редактирование
 
-Tasks can be discussed in [Telegram](https://t.me/hexletcommunity/12).
+Задачи можно обсудить в канале [Telegram](https://t.me/hexletcommunity/12).
 
-## Technologies
+## Технологии
 
-* **Language:** TypeScript
-* **Frontend:** React, Mantine, Redux Toolkit, Vite, HTML, SCSS
-* **Backend:** NestJS, Node.js
-* **Templating:** Pug
+* **Язык:** TypeScript
+* **Фронтенд:** React, Mantine, Redux Toolkit, Vite
+* **Бэкенд:** Fastify, tRPC, Drizzle ORM, Node.js
 
-## System requirements
+## Системные требования
 
-* Node >= 24
+* node >= 24
 * npm >= 9
-* PostgreSQL for use in production environments or SQLite for use in local development environments
+* PostgreSQL для продакшена, либо SQLite для локальной разработки
 
-## Install dependencies for backend and run
+## Установка зависимостей для бэкенда и его запуск
 
 ```bash
 npm install
@@ -37,7 +36,7 @@ npm run dev
 
 <http://localhost:3001>
 
-## Install dependencies for frontend and run
+## Установка зависимостей для фронтенда и его запуск
 
 ```bash
 cd frontend
@@ -47,23 +46,23 @@ npm run start
 
 <http://localhost:3000>
 
-## Old API Documentation
+## Старая API документация
 
-Structure of the old project's API is [here](https://runit.hexlet.ru/api).
+Структура API старого проекта находится [здесь](https://runit.hexlet.ru/api).
 
-## How you can help the project
+## Как помочь проекту
 
-Look at the list of [issues](https://github.com/hexlet-volunteers/runit/issues), choose an interesting task, and comment on the issue to say you would like to work on it.
+Посмотрите список [issue](https://github.com/hexlet-volunteers/runit/issues), выберите интересную задачу и напишите в issue, что хотите работать над ней.
 
-## Useful links
+## Полезные ссылки
 
-* [TS guidelines from Microsoft](https://github.com/microsoft/TypeScript/wiki/Coding-guidelines)
-* [TS guidelines from Google](https://google.github.io/styleguide/tsguide.html)
+* [Гайдлайн по TS от Microsoft](https://github.com/microsoft/TypeScript/wiki/Coding-guidelines)
+* [Гайдлайн по TS от Google](https://google.github.io/styleguide/tsguide.html)
 
 ---
 
-[![Hexlet Rus Ltd logo](https://raw.githubusercontent.com/Hexlet/assets/master/images/hexlet_logo128.png)](https://hexlet.io/?utm_source=github&utm_medium=link&utm_campaign=hexlet-editor)
+[![© ООО «Хекслет Рус» logo](https://raw.githubusercontent.com/Hexlet/assets/master/images/hexlet_logo128.png)](https://hexlet.io/?utm_source=github&utm_medium=link&utm_campaign=hexlet-editor)
 
-This repository is created and maintained by the team and the community of Hexlet Rus Ltd, an educational project. [Read more about Hexlet](https://hexlet.io/?utm_source=github&utm_medium=link&utm_campaign=hexlet-editor).
+Этот репозиторий создаётся и поддерживается командой и сообществом © ООО «Хекслет Рус», образовательный проект. [Подробнее о Хекслете](https://hexlet.io/?utm_source=github&utm_medium=link&utm_campaign=hexlet-editor).
 
-See the most active contributors on [hexlet-friends](https://friends.hexlet.io/).
+См. самых активных участников на [hexlet-friends](https://friends.hexlet.io/).
