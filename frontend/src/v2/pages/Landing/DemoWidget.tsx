@@ -9,6 +9,7 @@ const HL = {
   keyword: '#bb9af7',
   string: '#9ece6a',
   number: '#ff9e64',
+  method: '#4dabf7',
 };
 
 const escapeHtml = (s: string) =>
@@ -16,14 +17,14 @@ const escapeHtml = (s: string) =>
 
 // Лёгкая regex-подсветка JS для демо-виджета (полноценная — в редакторе, Monaco)
 function highlightJS(src: string): string {
-  const re =
-    /(\/\/[^\n]*)|('(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"|`(?:[^`\\]|\\.)*`)|\b(const|let|var|function|return|if|else|for|while|of|in|new|class|true|false|null|undefined)\b|\b(\d+(?:\.\d+)?)\b/g;
+const re =
+  /(\/\/[^\n]*)|('(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"|`(?:[^`\\]|\\.)*`)|\b(const|let|var|function|return|if|else|for|while|of|in|new|class|true|false|null|undefined)\b|\b(\d+(?:\.\d+)?)\b|\b(forEach|log|map|filter|reduce|push|pop|shift|unshift)\b/g;
   let out = '';
   let last = 0;
   for (let m = re.exec(src); m; m = re.exec(src)) {
     out += escapeHtml(src.slice(last, m.index));
-    const [full, comment, str, kw, num] = m;
-    const color = comment ? HL.comment : str ? HL.string : kw ? HL.keyword : HL.number;
+    const [full, comment, str, kw, num, method] = m;
+    const color = comment ? HL.comment : str ? HL.string : kw ? HL.keyword : num ? HL.number : method ? HL.method : HL.number;
     out += `<span style="color:${color}">${escapeHtml(full)}</span>`;
     last = m.index + full.length;
   }
