@@ -584,8 +584,8 @@ export default function EditorPage() {
           </div>
         </div>
 
-        {/* --- Правая панель: консоль/ввод (~40%) --- */}
-        <div style={{ width: '40%', maxWidth: 640, flexShrink: 0, minWidth: 260 }}>
+        {/* --- Правая панель: консоль/ввод (~25%) --- */}
+        <div style={{ width: '25%', flexShrink: 0, minWidth: 260 }}>
           <ConsolePanel
             tab={tab}
             onTabChange={setTab}
@@ -620,7 +620,7 @@ export default function EditorPage() {
         </Group>
         <Group gap="lg" wrap="nowrap">
           <Text fz={12} c="dimmed">UTF-8</Text>
-          <Text fz={12} c="dimmed">Runit v2.1 · MVP</Text>
+          <Text fz={12} c="dimmed">Runit v2.1</Text>
         </Group>
       </Group>
 
