@@ -23,8 +23,9 @@ function TerminalCard() {
         textAlign: 'left',
       }}
     >
-      <Text ff="inherit" fz="inherit" style={{ color: editorColors.accent }}>
-        $ runit open s/xK91q
+      <Text ff="inherit" fz="inherit">
+        <Text component="span" c={editorColors.accent}>$</Text>
+        <Text component="span" c={editorColors.text}> runit open s/xK91q</Text>
       </Text>
       <Text ff="inherit" fz="inherit" style={{ color: editorColors.error }}>
         Ошибка 404: сниппет не найден
