@@ -1,0 +1,1 @@
+export { default } from '../../pages/legal/ui/LegalPage'
