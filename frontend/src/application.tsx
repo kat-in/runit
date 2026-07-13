@@ -3,8 +3,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { createTRPCClient, httpLink } from '@trpc/client';
 import type { AppRouter } from '../../types/router/index';
-import V2App from './v2/App';
-import { TRPCProvider } from './utils/trpc';
+// import V2App from './v2/App';
+import V2FsdApp from './v2Fsd/App'; // подключена версия с FSD 
+// import { TRPCProvider } from './utils/trpc';
+import { TRPCProvider } from './v2Fsd/shared/api/trpc'; // подключена версия с FSD 
 
 // Runit v2 (MVP): новый интерфейс живёт в src/v2/ и является приложением по
 // умолчанию. Легаси-страницы (src/pages/, src/components/) отключены от
@@ -34,7 +36,8 @@ export default async () => {
     <QueryClientProvider client={queryClient}>
       <TRPCProvider queryClient={queryClient} trpcClient={trpcClient}>
         <BrowserRouter>
-          <V2App />
+          {/* <V2App /> */}
+          <V2FsdApp />
         </BrowserRouter>
       </TRPCProvider>
     </QueryClientProvider>
