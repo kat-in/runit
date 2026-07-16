@@ -11,7 +11,7 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
-import { useAuthModal } from '../context';
+import { useAuthModal } from '../model/authModal';
 import { useSession } from '../../../entities/user';
 import FormHeader from './FormHeader';
 import { validateEmail, validatePassword } from '../lib/validate';

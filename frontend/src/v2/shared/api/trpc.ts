@@ -3,3 +3,5 @@ import type { AppRouter } from '../../../../../types/router/index';
 
 export const { useTRPC, TRPCProvider, useTRPCClient } =
   createTRPCContext<AppRouter>();
+
+export type TrpcClient = ReturnType<typeof useTRPCClient>;

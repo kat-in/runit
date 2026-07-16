@@ -2,17 +2,9 @@ import { Link } from 'react-router-dom';
 import { ActionIcon, Anchor, Box, Checkbox, Group, Menu, Paper, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { langMeta } from '../../../shared/theme';
-import { type Snippet } from '../../../entities/snippet';
 import { relativeDate } from '../../../shared/lib';
 import { DotsIcon } from '../../../shared/ui';
-
-type Props = {
-  snippet: Snippet;
-  username: string;
-  selected: boolean;
-  onToggleSelect: () => void;
-  onDelete: () => void;
-};
+import { type SnippetCardProps } from '../types'
 
 /** Карточка сниппета в дашборде: имя, язык, дата, чекбокс, меню (открыть/копировать/удалить). */
 export default function SnippetCard({
@@ -21,7 +13,7 @@ export default function SnippetCard({
   selected,
   onToggleSelect,
   onDelete,
-}: Props) {
+}: SnippetCardProps) {
   const meta = langMeta[snippet.language] ?? {
     label: snippet.language,
     dot: '#adb5bd',

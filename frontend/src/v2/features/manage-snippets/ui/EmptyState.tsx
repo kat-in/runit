@@ -1,17 +1,11 @@
 import { Box, Button, Group, Paper, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import { langMeta } from '../../../shared/theme';
 import { sampleCode } from '../../../entities/snippet';
-
-const EXAMPLE_LANGS = ['javascript', 'python', 'php'] as const;
-
-type Props = {
-  onCreateClick: () => void;
-  onCreateExample: (language: string) => void;
-  creating: boolean;
-};
+import { type EmptyStateProps } from '../types'
+import { EXAMPLE_LANGS } from '../lib/constants'
 
 /** Пустое состояние дашборда: предложение создать сниппет или выбрать пример. */
-export default function EmptyState({ onCreateClick, onCreateExample, creating }: Props) {
+export default function EmptyState({ onCreateClick, onCreateExample, creating }: EmptyStateProps) {
   return (
     <Stack align="center" gap="lg" py={64}>
       <Title order={2} ta="center">

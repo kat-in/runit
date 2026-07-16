@@ -14,25 +14,10 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
+import { copyToClipboard } from '../../../shared/lib';
+import { type Props } from '../types'
 
-type Props = {
-  opened: boolean;
-  onClose: () => void;
-  username: string;
-  slug: string;
-  saved: boolean;
-};
-
-function copyToClipboard(value: string, message: string) {
-  navigator.clipboard
-    .writeText(value)
-    .then(() => notifications.show({ message, color: 'teal' }))
-    .catch(() =>
-      notifications.show({ message: 'Не удалось скопировать', color: 'red' }),
-    );
-}
-
+/** Модальное окно со ссылкой на сниппет и кодом для встраивания на сайт. */
 export default function ShareModal({ opened, onClose, username, slug, saved }: Props) {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [height, setHeight] = useState('380');

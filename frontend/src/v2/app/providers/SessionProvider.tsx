@@ -1,22 +1,18 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useMemo,
   useState,
   type ReactNode,
 } from 'react';
 import { useTRPCClient } from '../../shared/api';
-
-import type { SessionUser, SessionContextValue } from './types';
+import { SessionContext } from '../../entities/user';
+import type { SessionUser } from '../../entities/user';
 
 // TODO(#639, #792): мок-сессия до появления настоящей авторизации на бэкенде.
 // login не проверяет пароль (bcrypt-контур появится в #791/#639), сессия живёт
 // в localStorage. Контракт хука сохранится при переходе на реальный auth.
 
 const STORAGE_KEY = 'runit.v2.session';
-
-const SessionContext = createContext<SessionContextValue | null>(null);
 
 const readStored = (): SessionUser | null => {
   try {
@@ -78,10 +74,4 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
-}
-
-export function useSession(): SessionContextValue {
-  const ctx = useContext(SessionContext);
-  if (!ctx) throw new Error('useSession must be used within SessionProvider');
-  return ctx;
 }

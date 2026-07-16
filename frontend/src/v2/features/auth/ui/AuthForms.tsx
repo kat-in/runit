@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAuthModal } from '../context';
+import { useAuthModal } from '../model/authModal';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import ResetForm from './ResetForm';

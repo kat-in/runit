@@ -4,13 +4,11 @@ import '@mantine/notifications/styles.css';
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 
-// Runit v2: лёгкие глобальные стили вместо легаси bootstrap-сборки
-// (application.scss остаётся для справки — см. #816).
 import './global.css';
 
 import { v2Theme } from './theme';
-import { SessionProvider } from '../entities/user';
-import { AuthModalProvider } from '../features/auth';
+import { SessionProvider } from './providers/';
+import { AuthModalProvider } from './providers';
 
 export default function AppProviders({children}) {
   return (

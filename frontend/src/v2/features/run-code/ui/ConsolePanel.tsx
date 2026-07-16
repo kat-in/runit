@@ -3,8 +3,7 @@ import { editorColors } from '../../../shared/theme';
 import type { ConsoleLine } from '../../../shared/runner';
 import { IconTrash } from '../../../shared/ui';
 import TabButton from './TabButton';
-
-export type OutputTab = 'console' | 'input';
+import { type ConsolePanelProps } from '../types'
 
 const lineColor: Record<ConsoleLine['type'], string> = {
   log: editorColors.text,
@@ -12,16 +11,6 @@ const lineColor: Record<ConsoleLine['type'], string> = {
   warn: '#e5c07b',
   info: editorColors.accent,
   system: editorColors.dim,
-};
-
-type Props = {
-  tab: OutputTab;
-  onTabChange: (tab: OutputTab) => void;
-  lines: ConsoleLine[];
-  running: boolean;
-  stdin: string;
-  onStdinChange: (value: string) => void;
-  onClear: () => void;
 };
 
 export default function ConsolePanel({
@@ -32,7 +21,7 @@ export default function ConsolePanel({
   stdin,
   onStdinChange,
   onClear,
-}: Props) {
+}: ConsolePanelProps ) {
   return (
     <Box
       style={{

@@ -1,2 +1,2 @@
-export { SessionProvider, useSession } from './SessionProvider';
+export { SessionContext, useSession } from './model/session';
 export type { SessionUser, SessionContextValue } from './types';

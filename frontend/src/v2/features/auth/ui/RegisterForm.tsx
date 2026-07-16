@@ -11,7 +11,7 @@ import {
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { Link } from 'react-router-dom';
-import { useAuthModal } from '../context';
+import { useAuthModal } from '../model/authModal';
 import { useSession } from '../../../entities/user';
 import FormHeader from './FormHeader';
 import { validateEmail, validatePassword, validateUsername } from '../lib/validate';

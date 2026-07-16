@@ -11,6 +11,7 @@ export const editorColors = {
   ok: '#51cf66',
 };
 
+// TODO: typescript есть в langMeta, но не в createSnippetSchema на бэкенде
 export const langMeta: Record<string, { label: string; dot: string; runnable: boolean }> = {
   javascript: { label: 'JavaScript', dot: '#f1e05a', runnable: true },
   typescript: { label: 'TypeScript', dot: '#3178c6', runnable: false },

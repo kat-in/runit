@@ -6,18 +6,12 @@ import {
 } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
-  ActionIcon,
-  Avatar,
   Box,
   Button,
   Center,
-  Group,
   Loader,
-  Menu,
   Stack,
   Text,
-  Tooltip,
-  UnstyledButton,
 } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import MonacoEditor, { type OnMount } from '@monaco-editor/react';
@@ -27,62 +21,21 @@ import { useTRPCClient } from '../../../shared/api';
 import { editorColors, langMeta } from '../../../shared/theme';
 import { useSession } from '../../../entities/user';
 import { useAuthModal } from '../../../features/auth';
-import { RunitLogo } from '../../../shared/ui';
 
-
-import { initialsOf } from '../../../shared/lib/initialsOf';
-import { runJavaScript, unsupportedLanguage, type ConsoleLine } from '../../../shared/runner';
-import { ConsolePanel, type OutputTab } from '../../../features/run-code';
+import { ConsolePanel } from '../../../features/run-code';
 import { ShareModal } from '../../../features/share-snippet';
 import AddPackageModal from './AddPackageModal';
-import SectionLabel from './SectionLabel';
-import {
-  IconArrowLeft,
-  IconHistory,
-  IconPlay,
-  IconPlus,
-  IconShare,
-  IconUsers,
-} from '../../../shared/ui';
+
+import { FILE_NAME_BY_LANGUAGE, STARTER_CODE, SAVE_STATUS_META } from '../lib/constants'
+import { type SaveStatus } from "../types";
+import EditorHeader from './EditorHeader';
+import EditorSidebar from './EditorSidebar'
+import EditorStatusBar from './EditorStatusBar'
+import { useRunner } from '../../../features/run-code'
 
 // Экран редактора Runit v2 (docs/design/editor.png).
 // TODO(#821, #609): серверное исполнение — сейчас JS выполняется в Web Worker,
 // остальные языки отвечают заглушкой unsupportedLanguage.
-
-/** Статус сохранения сниппета. */
-type SaveStatus = 'saved' | 'saving' | 'unsaved';
-
-/** Маппинг языка на имя файла по умолчанию. */
-const FILE_NAME_BY_LANGUAGE: Record<string, string> = {
-  javascript: 'index.js',
-  typescript: 'index.ts',
-  python: 'main.py',
-  php: 'index.php',
-  ruby: 'main.rb',
-  java: 'Main.java',
-  html: 'index.html',
-};
-
-const STARTER_CODE = `// Корзина курса: считаем итоговую стоимость
-const items = [
-  { title: 'JS: Массивы', price: 3900 },
-  { title: 'JS: Функции', price: 4900 },
-  { title: 'JS: Объекты', price: 4400 },
-];
-
-const sum = (nums) => nums.reduce((acc, n) => acc + n, 0);
-const total = sum(items.map((item) => item.price));
-
-console.log('Позиций в корзине:', items.length);
-console.log('Сумма без скидки:', total, '₽');
-`;
-
-/** Мета-информация для каждого статуса сохранения. */
-const SAVE_STATUS_META: Record<SaveStatus, { color: string; label: string }> = {
-  saved: { color: '#51cf66', label: 'Сохранено' },
-  saving: { color: '#4dabf7', label: 'Сохранение…' },
-  unsaved: { color: '#adb5bd', label: 'Не сохранено' },
-};
 
 /** Страница редактора сниппетов с Monaco Editor, консолью и сохранением. */
 export default function EditorPage() {
@@ -98,10 +51,6 @@ export default function EditorPage() {
   const [language, setLanguage] = useState('javascript');
   const [slug, setSlug] = useState<string | null>(null);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('unsaved');
-  const [stdin, setStdin] = useState('');
-  const [lines, setLines] = useState<ConsoleLine[]>([]);
-  const [running, setRunning] = useState(false);
-  const [tab, setTab] = useState<OutputTab>('console');
   const [cursor, setCursor] = useState({ line: 1, col: 1 });
   const [shareOpened, setShareOpened] = useState(false);
   const [packageOpened, setPackageOpened] = useState(false);
@@ -109,12 +58,12 @@ export default function EditorPage() {
   // Рефы для стабильных колбэков (хоткей, monaco-команда, debounce).
   const nameRef = useRef(name);
   const codeRef = useRef(code);
-  const stdinRef = useRef(stdin);
   const languageRef = useRef(language);
   nameRef.current = name;
   codeRef.current = code;
-  stdinRef.current = stdin;
   languageRef.current = language;
+
+  const { running, lines, stdin, runRef, setStdin, tab, setTab, handleRun, clearLines } = useRunner(code, language)
 
   const initializedFor = useRef<string>('');
 
@@ -213,43 +162,6 @@ export default function EditorPage() {
 
   const markDirty = useCallback(() => setSaveStatus('unsaved'), []);
 
-  // --- Запуск -------------------------------------------------------------
-  const runningRef = useRef(false);
-  /** Запускает выполнение кода (JS — в Web Worker, остальное — заглушка). */
-  const handleRun = useCallback(async () => {
-    if (runningRef.current) return;
-    runningRef.current = true;
-    setRunning(true);
-    setTab('console');
-    const result =
-      languageRef.current === 'javascript'
-        ? await runJavaScript(codeRef.current, stdinRef.current)
-        : unsupportedLanguage(languageRef.current);
-    setLines([
-      ...result.lines,
-      {
-        type: 'system',
-        text: `Процесс завершён с кодом ${result.exitCode} за ${Math.max(1, Math.round(result.durationMs))} мс`,
-      },
-    ]);
-    runningRef.current = false;
-    setRunning(false);
-  }, []);
-
-  const runRef = useRef(handleRun);
-  runRef.current = handleRun;
-
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        e.preventDefault();
-        void runRef.current();
-      }
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, []);
-
   /** Обработчик монтирования Monaco Editor: отслеживание позиции курсора и хоткей Ctrl+Enter. */
   const handleEditorMount: OnMount = (editor, monaco) => {
     editor.onDidChangeCursorPosition((e) => {
@@ -299,234 +211,23 @@ export default function EditorPage() {
       }}
     >
       {/* ===== Верхняя панель (52px) ===== */}
-      <Group
-        component="header"
-        px="md"
-        justify="space-between"
-        wrap="nowrap"
-        style={{
-          height: 52,
-          flexShrink: 0,
-          background: '#fff',
-          borderBottom: '1px solid #e9ecef',
-        }}
-      >
-        <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
-          <Tooltip label="К моим сниппетам" withArrow>
-            <ActionIcon
-              component={Link}
-              to="/snippets"
-              variant="subtle"
-              color="gray"
-              aria-label="Назад к сниппетам"
-            >
-              <IconArrowLeft />
-            </ActionIcon>
-          </Tooltip>
-          <UnstyledButton component={Link} to="/">
-            <RunitLogo size={26} />
-          </UnstyledButton>
-          <input
-            value={name}
-            onChange={(e) => {
-              setName(e.currentTarget.value);
-              markDirty();
-            }}
-            placeholder="имя-сниппета"
-            aria-label="Имя сниппета"
-            spellCheck={false}
-            style={{
-              border: 'none',
-              outline: 'none',
-              background: 'transparent',
-              fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-              fontSize: 15,
-              fontWeight: 600,
-              color: '#212529',
-              width: 200,
-              minWidth: 0,
-            }}
-          />
-          <Group
-            gap={6}
-            px={10}
-            py={4}
-            wrap="nowrap"
-            style={{ background: '#f1f3f5', borderRadius: 8, flexShrink: 0 }}
-          >
-            <Box w={8} h={8} style={{ borderRadius: '50%', background: meta.dot }} />
-            <Text fz="sm" fw={600} c="dark.5">
-              {meta.label}
-            </Text>
-          </Group>
-          <Tooltip
-            label={
-              isGuest
-                ? 'Зарегистрируйтесь, чтобы сохранять сниппеты'
-                : 'Сохранить сейчас (автосохранение — 1,5 с)'
-            }
-            withArrow
-          >
-            <UnstyledButton onClick={() => void saveNow()}>
-              <Group gap={6} wrap="nowrap">
-                <Box
-                  w={8}
-                  h={8}
-                  style={{ borderRadius: '50%', background: statusMeta.color }}
-                />
-                <Text fz="sm" c="dimmed" style={{ whiteSpace: 'nowrap' }}>
-                  {statusMeta.label}
-                </Text>
-              </Group>
-            </UnstyledButton>
-          </Tooltip>
-        </Group>
-
-        <Group gap="sm" wrap="nowrap">
-          {/* TODO(#836, #837): история версий со снапшотами и diff */}
-          <Tooltip label="В разработке (#836/#837)" withArrow>
-            <ActionIcon
-              variant="subtle"
-              color="gray"
-              data-disabled
-              onClick={(e) => e.preventDefault()}
-              aria-label="История версий"
-            >
-              <IconHistory />
-            </ActionIcon>
-          </Tooltip>
-          {/* TODO(#3, #838): совместное редактирование в реальном времени */}
-          <Tooltip label="В разработке (#3/#838)" withArrow>
-            <ActionIcon
-              variant="subtle"
-              color="gray"
-              data-disabled
-              onClick={(e) => e.preventDefault()}
-              aria-label="Совместная сессия"
-            >
-              <IconUsers />
-            </ActionIcon>
-          </Tooltip>
-          <Button
-            variant="light"
-            leftSection={<IconShare />}
-            onClick={() => setShareOpened(true)}
-          >
-            Поделиться
-          </Button>
-          <Tooltip label="Ctrl + Enter" withArrow>
-            <Button
-              leftSection={<IconPlay />}
-              onClick={() => void handleRun()}
-              disabled={running}
-            >
-              {running ? 'Выполняется…' : 'Выполнить'}
-            </Button>
-          </Tooltip>
-          {isGuest ? (
-            <Button variant="subtle" color="gray" onClick={() => auth.open('login')}>
-              Войти
-            </Button>
-          ) : (
-            <Menu position="bottom-end" width={180} radius="md">
-              <Menu.Target>
-                <UnstyledButton>
-                  <Avatar color="blue" radius="xl" size={34}>
-                    {initialsOf(user!.username)}
-                  </Avatar>
-                </UnstyledButton>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Label>{user!.username}</Menu.Label>
-                <Menu.Item component={Link} to="/snippets">
-                  Мои сниппеты
-                </Menu.Item>
-                <Menu.Item component={Link} to={`/u/${user!.username}`}>
-                  Профиль
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          )}
-        </Group>
-      </Group>
+      <EditorHeader
+        setName={setName}
+        name={name}
+        meta={meta}
+        saveNow={saveNow}
+        statusMeta={statusMeta}
+        setShareOpened={setShareOpened}
+        handleRun={handleRun}
+        running={running}
+        markDirty={markDirty}
+      />
 
       {/* ===== Основная область ===== */}
       <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
+
         {/* --- Левый сайдбар (212px) --- */}
-        <Box
-          component="aside"
-          w={212}
-          style={{
-            flexShrink: 0,
-            background: '#fff',
-            borderRight: '1px solid #e9ecef',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <Group justify="space-between" px="md" pt="md" pb={6}>
-            <SectionLabel>ФАЙЛЫ</SectionLabel>
-            {/* TODO(#818, #819): мультифайловые сниппеты */}
-            <Tooltip label="Мультифайловость — #818/#819" withArrow>
-              <ActionIcon
-                variant="subtle"
-                color="gray"
-                size="sm"
-                data-disabled
-                onClick={(e) => e.preventDefault()}
-                aria-label="Добавить файл"
-              >
-                <IconPlus size={14} />
-              </ActionIcon>
-            </Tooltip>
-          </Group>
-          <Box px={8}>
-            <Group
-              gap={8}
-              px={10}
-              py={8}
-              wrap="nowrap"
-              style={{
-                background: 'var(--mantine-color-blue-0)',
-                borderRadius: 8,
-              }}
-            >
-              <Box w={8} h={8} style={{ borderRadius: '50%', background: meta.dot }} />
-              <Text ff="monospace" fz="sm" fw={600} c="blue.7">
-                {fileName}
-              </Text>
-            </Group>
-          </Box>
-
-          <div style={{ flex: 1 }} />
-
-          <Group justify="space-between" px="md" pb={6}>
-            <SectionLabel>ПАКЕТЫ</SectionLabel>
-            <Tooltip label="Добавить пакет" withArrow>
-              <ActionIcon
-                variant="subtle"
-                color="gray"
-                size="sm"
-                onClick={() => setPackageOpened(true)}
-                aria-label="Добавить пакет"
-              >
-                <IconPlus size={14} />
-              </ActionIcon>
-            </Tooltip>
-          </Group>
-          <Text px="md" pb="sm" fz="sm" c="dimmed">
-            Нет зависимостей
-          </Text>
-          <Text
-            px="md"
-            py={10}
-            fz="xs"
-            c="dimmed"
-            style={{ borderTop: '1px solid #e9ecef' }}
-          >
-            Node.js 20 LTS
-          </Text>
-        </Box>
+        <EditorSidebar fileName={fileName} meta={meta} setPackageOpened={setPackageOpened}/>
 
         {/* --- Центр: редактор кода --- */}
         <div
@@ -596,36 +297,13 @@ export default function EditorPage() {
             running={running}
             stdin={stdin}
             onStdinChange={setStdin}
-            onClear={() => setLines([])}
+            onClear={clearLines}
           />
         </div>
       </div>
 
       {/* ===== Статус-бар (28px) ===== */}
-      <Group
-        px="md"
-        justify="space-between"
-        wrap="nowrap"
-        style={{
-          height: 28,
-          flexShrink: 0,
-          background: '#fff',
-          borderTop: '1px solid #e9ecef',
-        }}
-      >
-        <Group gap="lg" wrap="nowrap">
-          <Text fz={12} c="dimmed">{meta.label}</Text>
-          <Text fz={12} c="dimmed">Node.js 20 LTS</Text>
-          <Text fz={12} c="dimmed">
-            Строка {cursor.line}, столбец {cursor.col}
-          </Text>
-          <Text fz={12} c="dimmed">Отступ: 2 пробела</Text>
-        </Group>
-        <Group gap="lg" wrap="nowrap">
-          <Text fz={12} c="dimmed">UTF-8</Text>
-          <Text fz={12} c="dimmed">Runit v2.1</Text>
-        </Group>
-      </Group>
+      <EditorStatusBar meta={meta} cursor={cursor}/>
 
       <ShareModal
         opened={shareOpened}

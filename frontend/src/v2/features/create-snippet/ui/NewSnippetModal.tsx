@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   ActionIcon,
   Box,
@@ -16,81 +13,28 @@ import {
   TextInput,
   UnstyledButton,
 } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import { IconDice5 } from '@tabler/icons-react';
 import { langMeta } from '../../../shared/theme';
-import { useSession } from '../../../entities/user';
-import { useTRPCClient } from '../../../shared/api';
-import { SNIPPETS_QUERY_KEY, sampleCode } from '../../../entities/snippet';
 import FieldLabel from './FieldLabel';
-
-/** Подсказки для каждого уровня видимости сниппета. */
-const VISIBILITY_HINTS: Record<string, string> = {
-  private: 'Виден только вам',
-  link: 'Доступен всем, у кого есть ссылка',
-  public: 'Виден в вашем профиле и в поиске',
-};
-
-/** Свойства модального окна создания сниппета. */
-type Props = {
-  opened: boolean;
-  onClose: () => void;
-};
+import { VISIBILITY_HINTS } from '../lib/constants'
+import { type Props } from '../types'
+import useCreateSnippet from '../model/useCreateSnippet';
 
 /** Модальное окно создания нового сниппета с выбором языка, видимости и генерацией названия. */
 export default function NewSnippetModal({ opened, onClose }: Props) {
-  const trpc = useTRPCClient();
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const { user } = useSession();
-
-  const [name, setName] = useState('');
-  const [language, setLanguage] = useState('javascript');
-  const [visibility, setVisibility] = useState('link');
-  const [withExample, setWithExample] = useState(true);
-  const [rolling, setRolling] = useState(false);
-
-  /** Генерирует случайное название сниппета через API. */
-  const rollName = async () => {
-    setRolling(true);
-    try {
-      const generated = await trpc.snippets.generateSnippetName.query();
-      setName(generated.name);
-    } catch {
-      notifications.show({ message: 'Не удалось сгенерировать имя', color: 'red' });
-    } finally {
-      setRolling(false);
-    }
-  };
-
-  // При открытии — сброс формы и сразу сгенерированное имя, как в макете.
-  useEffect(() => {
-    if (!opened) return;
-    setLanguage('javascript');
-    setVisibility('link');
-    setWithExample(true);
-    setName('');
-    rollName();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [opened]);
-
-  const createMutation = useMutation({
-    mutationFn: () =>
-      trpc.snippets.createSnippet.mutate({
-        name: name.trim(),
-        code: withExample ? (sampleCode[language] ?? '') : '',
-        language: language as 'ruby' | 'java' | 'php' | 'python' | 'javascript' | 'html',
-        userId: user!.id,
-      }),
-    onSuccess: (created) => {
-      queryClient.invalidateQueries({ queryKey: SNIPPETS_QUERY_KEY });
-      onClose();
-      navigate(`/editor/${created.id}`);
-    },
-    onError: () => {
-      notifications.show({ message: 'Не удалось создать сниппет', color: 'red' });
-    },
-  });
+  const { 
+    name,
+    setName,
+    language,
+    setLanguage,
+    visibility,
+    setVisibility,
+    withExample,
+    setWithExample,
+    rolling,
+    rollName,
+    createMutation,
+  } = useCreateSnippet({ opened, onClose })
 
   // TODO(#641): реальный выбор версии среды исполнения; пока статичное значение.
   const envOptions =

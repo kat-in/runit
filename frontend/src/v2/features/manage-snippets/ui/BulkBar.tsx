@@ -1,20 +1,15 @@
 import { Button, Group, Paper, Text } from '@mantine/core';
 import { editorColors } from '../../../shared/theme';
 import DisabledAction from './DisabledAction';
+import { type BulkBarProps } from '../types'
 
 // Тёмная панель массовых действий. Появляется, когда выбран хотя бы один сниппет.
 // TODO(#830): массовое добавление тегов (тегов пока нет в модели данных).
 // TODO(#613): смена видимости (поле видимости появится на сервере).
 
-type Props = {
-  count: number;
-  onClear: () => void;
-};
-
 /** Фиксированная панель массовых действий. Отображается при выборе >= 1 сниппета. */
-export default function BulkBar({ count, onClear }: Props) {
+export default function BulkBar({ count, onClear }: BulkBarProps) {
   if (count === 0) return null;
-
   return (
     <Paper
       radius="xl"

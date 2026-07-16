@@ -1,1 +1,1 @@
-export { useAuthModal, AuthModalProvider} from './ui/AuthModal';
+export { useAuthModal } from './model/authModal';

@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Badge,
   Box,
@@ -15,15 +14,12 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import { AppHeader } from '../../../widgets/header';
 import { AppFooter } from '../../../widgets/footer';
 import { langMeta } from '../../../shared/theme';
 import { useSession } from '../../../entities/user';
-import { useTRPCClient } from '../../../shared/api';
-import { SnippetCard, EmptyState, BulkBar } from '../../../features/manage-snippets';
+import { SnippetCard, EmptyState, BulkBar, useManageSnippets, useSnippetFilter } from '../../../features/manage-snippets';
 import { NewSnippetModal } from '../../../features/create-snippet';
-import { SNIPPETS_QUERY_KEY, sampleCode, type Snippet } from '../../../entities/snippet';
 import { SearchIcon } from '../../../shared/ui';
 
 type SortMode = 'new' | 'old' | 'name';
@@ -31,13 +27,6 @@ type SortMode = 'new' | 'old' | 'name';
 export default function DashboardPage() {
   const { user, isGuest } = useSession();
   const navigate = useNavigate();
-  const trpc = useTRPCClient();
-  const queryClient = useQueryClient();
-
-  const [search, setSearch] = useState('');
-  const [langFilter, setLangFilter] = useState<string>('all');
-  const [sort, setSort] = useState<SortMode>('new');
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [modalOpened, setModalOpened] = useState(false);
 
   // Гостям кабинет недоступен — уводим на лендинг.
@@ -45,81 +34,26 @@ export default function DashboardPage() {
     if (isGuest) navigate('/', { replace: true });
   }, [isGuest, navigate]);
 
-  const { data: allSnippets, isLoading } = useQuery({
-    queryKey: SNIPPETS_QUERY_KEY,
-    queryFn: () => trpc.snippets.getAllSnippets.query() as Promise<Snippet[]>,
-    enabled: !isGuest,
-  });
+  const {
+    hasAny,
+    visibleSnippets,
+    search,
+    langFilter,
+    setSearch,
+    setLangFilter,
+    sort,
+    setSort,
+    isLoading,
+    mySnippets,
+  } = useSnippetFilter();
 
-  // TODO(#828): серверная выборка «мои сниппеты» вместо фильтрации всего списка на клиенте.
-  const mySnippets = useMemo(
-    () => (allSnippets ?? []).filter((s) => s.userId === user?.id),
-    [allSnippets, user?.id],
-  );
-
-  const visibleSnippets = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    const filtered = mySnippets.filter((s) => {
-      if (langFilter !== 'all' && s.language !== langFilter) return false;
-      if (query && !s.name.toLowerCase().includes(query)) return false;
-      return true;
-    });
-    const sorted = [...filtered];
-    if (sort === 'name') {
-      sorted.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
-    } else {
-      sorted.sort((a, b) => {
-        const da = new Date(a.createdAt).getTime();
-        const db = new Date(b.createdAt).getTime();
-        return sort === 'new' ? db - da : da - db;
-      });
-    }
-    return sorted;
-  }, [mySnippets, search, langFilter, sort]);
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => trpc.snippets.deleteSnippet.mutate({ id }),
-    onSuccess: (_data, id) => {
-      setSelectedIds((prev) => prev.filter((x) => x !== id));
-      queryClient.invalidateQueries({ queryKey: SNIPPETS_QUERY_KEY });
-      notifications.show({ message: 'Сниппет удалён', color: 'blue' });
-    },
-    onError: () => {
-      notifications.show({ message: 'Не удалось удалить сниппет', color: 'red' });
-    },
-  });
-
-  // TODO: бэкенд возвращает `id?` и `language: string`, а useMutation ожидает строгие типы. 
-  // Временное решение:
-  // as Promise<{ id: number }> и
-  // language as 'ruby' | 'java' | 'php' | 'python' | 'javascript' | 'html',
-  // когда бэкенд поправит — убрать.
-  const createExampleMutation = useMutation({
-    mutationFn: (language: string) =>
-      trpc.snippets.createSnippet.mutate({
-        name: `example-${language}`,
-        code: sampleCode[language] ?? '',
-        language: language as 'ruby' | 'java' | 'php' | 'python' | 'javascript' | 'html',
-        userId: user!.id,
-      }) as Promise<{ id: number }>,
-    onSuccess: (created: { id: number }) => {
-      queryClient.invalidateQueries({ queryKey: SNIPPETS_QUERY_KEY });
-      navigate(`/editor/${created.id}`);
-    },
-    onError: () => {
-      notifications.show({ message: 'Не удалось создать сниппет', color: 'red' });
-    },
-  });
-
-  const toggleSelect = (id: number) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
-  };
-
-  if (isGuest) return null;
-
-  const hasAny = mySnippets.length > 0;
+  const {
+    deleteMutation,
+    createExampleMutation,
+    selectedIds,
+    clearSelection,
+    toggleSelect,
+  } = useManageSnippets(user!.id)
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -230,7 +164,7 @@ export default function DashboardPage() {
         </Container>
       </Box>
 
-      <BulkBar count={selectedIds.length} onClear={() => setSelectedIds([])} />
+      <BulkBar count={selectedIds.length} onClear={clearSelection} />
       <NewSnippetModal opened={modalOpened} onClose={() => setModalOpened(false)} />
 
       <AppFooter />
