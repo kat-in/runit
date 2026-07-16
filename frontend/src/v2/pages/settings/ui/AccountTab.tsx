@@ -13,7 +13,7 @@ import {
 import { useTRPCClient } from '../../../shared/api';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
-import { useSession } from '../../../entities/user';
+import { useSession, deleteUser } from '../../../entities/user';
 
 /** Вкладка «Аккаунт»: email, пароль, активные сессии, удаление аккаунта. */
 export default function AccountTab() {
@@ -24,7 +24,7 @@ export default function AccountTab() {
 
   /** Мутация удаления аккаунта и всех сниппетов. TODO(#834): каскадная очистка. */
   const deleteMutation = useMutation({
-    mutationFn: () => trpc.users.deleteUser.mutate({ id: user!.id }),
+    mutationFn: () => deleteUser(trpc, user!.id),
     onSuccess: () => {
       notifications.show({ message: 'Аккаунт удалён', color: 'gray' });
       logout();
@@ -53,7 +53,11 @@ export default function AccountTab() {
             </Badge>
           </Group>
           <Tooltip label="В разработке (#416/#472)">
-            <Button variant="default" data-disabled onClick={(e) => e.preventDefault()}>
+            <Button
+              variant="default"
+              data-disabled
+              onClick={(e) => e.preventDefault()}
+            >
               Сменить
             </Button>
           </Tooltip>
@@ -70,7 +74,11 @@ export default function AccountTab() {
           </Text>
           {/* TODO(#770, #640): смена пароля через бэкенд */}
           <Tooltip label="В разработке (#770/#640)">
-            <Button variant="default" data-disabled onClick={(e) => e.preventDefault()}>
+            <Button
+              variant="default"
+              data-disabled
+              onClick={(e) => e.preventDefault()}
+            >
               Сменить пароль
             </Button>
           </Tooltip>
@@ -104,10 +112,14 @@ export default function AccountTab() {
         </Text>
         <Group justify="space-between" wrap="nowrap" align="center">
           <Text c="dimmed" fz="sm">
-            Аккаунт и все сниппеты будут удалены безвозвратно. Это действие нельзя
-            отменить.
+            Аккаунт и все сниппеты будут удалены безвозвратно. Это действие
+            нельзя отменить.
           </Text>
-          <Button color="red" variant="outline" onClick={() => setConfirmOpened(true)}>
+          <Button
+            color="red"
+            variant="outline"
+            onClick={() => setConfirmOpened(true)}
+          >
             Удалить аккаунт
           </Button>
         </Group>

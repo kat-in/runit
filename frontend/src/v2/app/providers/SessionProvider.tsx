@@ -1,11 +1,10 @@
-import {
-  useCallback,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
+import { useCallback, useMemo, useState, type ReactNode } from 'react';
 import { useTRPCClient } from '../../shared/api';
-import { SessionContext } from '../../entities/user';
+import {
+  SessionContext,
+  getUserByEmail,
+  createUser,
+} from '../../entities/user';
 import type { SessionUser } from '../../entities/user';
 
 // TODO(#639, #792): мок-сессия до появления настоящей авторизации на бэкенде.
@@ -36,7 +35,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const login = useCallback(
     async (email: string, _password: string) => {
       // TODO(#639): реальная проверка пароля на сервере.
-      const found = await trpc.users.getUserByEmail.query(email);
+      const found = await getUserByEmail(trpc, email);
       const u: SessionUser = {
         id: found.id,
         username: found.username,
@@ -50,11 +49,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   const register = useCallback(
     async (username: string, email: string, password: string) => {
-      const created = await trpc.users.createUser.mutate({
-        username,
-        email,
-        password,
-      });
+      const created = await createUser(trpc, { username, email, password });
       const u: SessionUser = {
         id: created.id,
         username: created.username,
@@ -73,5 +68,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     [user, login, register, logout],
   );
 
-  return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
+  return (
+    <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
+  );
 }
