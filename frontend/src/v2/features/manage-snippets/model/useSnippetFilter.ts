@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useSession } from '../../../entities/user';
 import { useTRPCClient } from '../../../shared/api';
-import { SNIPPETS_QUERY_KEY, type Snippet } from '../../../entities/snippet';
+import { SNIPPETS_QUERY_KEY, getAllSnippets } from '../../../entities/snippet';
 
 type SortMode = 'new' | 'old' | 'name';
 
@@ -22,7 +22,7 @@ export default function useSnippetFilter() {
 
   const { data: allSnippets, isLoading } = useQuery({
     queryKey: SNIPPETS_QUERY_KEY,
-    queryFn: () => trpc.snippets.getAllSnippets.query() as Promise<Snippet[]>,
+    queryFn: () => getAllSnippets(trpc),
     enabled: !isGuest,
   });
 
