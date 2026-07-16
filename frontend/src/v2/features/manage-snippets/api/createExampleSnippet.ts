@@ -1,4 +1,4 @@
-import type { TrpcClient } from '../../../shared/api/trpc';
+import type { TrpcClient } from '../../../shared/api';
 import { sampleCode, createSnippet } from '../../../entities/snippet';
 
 /** Создаёт сниппет-пример с указанным языком. */

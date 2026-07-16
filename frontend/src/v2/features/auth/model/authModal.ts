@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { AuthModalContextValue } from '../types'
+import { AuthModalContextValue } from '..'
 
 
 export const AuthModalContext = createContext<AuthModalContextValue | null>(null);

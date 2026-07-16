@@ -1,4 +1,4 @@
-import type { TrpcClient } from '../../../shared/api/trpc';
+import type { TrpcClient } from '../../../shared/api';
 
 // TODO: бэкенд возвращает `id?` и `language: string`, а useMutation ожидает строгие типы.
 // Временное решение: as Promise<{ id: number; slug: string }> и language as 'ruby' | 'java' | ...,

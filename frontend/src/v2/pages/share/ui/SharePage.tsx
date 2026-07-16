@@ -22,7 +22,7 @@ import { editorColors, langMeta } from '../../../shared/theme';
 import { useSession } from '../../../entities/user';
 import { useAuthModal } from '../../../features/auth';
 import { AppHeader } from '../../../widgets/header';
-import { initialsOf } from '../../../shared/lib/initialsOf';
+import { initialsOf } from '../../../shared/lib';
 import { AppFooter } from '../../../widgets/footer';
 import CodeCard from './CodeCard';
 import NotFoundState from './NotFoundState';

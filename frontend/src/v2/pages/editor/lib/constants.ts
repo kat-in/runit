@@ -1,4 +1,4 @@
-import { type SaveStatus } from "../types";
+import { type SaveStatus } from "..";
 
 /** Маппинг языка на имя файла по умолчанию. */
 export const FILE_NAME_BY_LANGUAGE: Record<string, string> = {

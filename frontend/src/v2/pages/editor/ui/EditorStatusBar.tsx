@@ -2,7 +2,7 @@ import {
   Group,
   Text,
 } from '@mantine/core';
-import { type Meta } from '../types'
+import { type Meta } from '..'
 
 export type StatusBarProps = {
   meta: Meta,

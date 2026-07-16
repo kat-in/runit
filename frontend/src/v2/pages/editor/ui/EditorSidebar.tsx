@@ -10,7 +10,7 @@ import SectionLabel from './SectionLabel';
 import {
   IconPlus,
 } from '../../../shared/ui';
-import { type Meta } from '../types'
+import { type Meta } from '..'
 
 export type EditorSidebarProps = {
   meta: Meta,

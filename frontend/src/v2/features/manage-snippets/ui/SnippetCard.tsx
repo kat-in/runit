@@ -4,7 +4,7 @@ import { notifications } from '@mantine/notifications';
 import { langMeta } from '../../../shared/theme';
 import { relativeDate } from '../../../shared/lib';
 import { DotsIcon } from '../../../shared/ui';
-import { type SnippetCardProps } from '../types'
+import { type SnippetCardProps } from '..'
 
 /** Карточка сниппета в дашборде: имя, язык, дата, чекбокс, меню (открыть/копировать/удалить). */
 export default function SnippetCard({

@@ -10,7 +10,7 @@ import {
   generateSnippetName,
   createSnippet,
 } from '../../../entities/snippet';
-import { type Props } from '../types';
+import { type Props } from '..';
 
 /**
  * Хук управления состоянием и логикой создания сниппета.

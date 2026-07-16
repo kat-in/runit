@@ -19,7 +19,7 @@ import { useSession } from '../../../entities/user';
 import { useUserByUsername } from '../../../entities/user';
 import { useTRPCClient } from '../../../shared/api';
 import { AppHeader } from '../../../widgets/header';
-import { initialsOf } from '../../../shared/lib/initialsOf';
+import { initialsOf } from '../../../shared/lib';
 import { AppFooter } from '../../../widgets/footer';
 import { plural } from '../../../shared/lib';
 import { type Snippet, getAllSnippets } from '../../../entities/snippet';

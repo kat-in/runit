@@ -15,7 +15,7 @@ import {
   TextInput,
 } from '@mantine/core';
 import { copyToClipboard } from '../../../shared/lib';
-import { type Props } from '../types'
+import { type Props } from '..'
 
 /** Модальное окно со ссылкой на сниппет и кодом для встраивания на сайт. */
 export default function ShareModal({ opened, onClose, username, slug, saved }: Props) {

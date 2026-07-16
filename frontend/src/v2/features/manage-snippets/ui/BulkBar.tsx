@@ -1,7 +1,7 @@
 import { Button, Group, Paper, Text } from '@mantine/core';
 import { editorColors } from '../../../shared/theme';
 import DisabledAction from './DisabledAction';
-import { type BulkBarProps } from '../types'
+import { type BulkBarProps } from '..'
 
 // Тёмная панель массовых действий. Появляется, когда выбран хотя бы один сниппет.
 // TODO(#830): массовое добавление тегов (тегов пока нет в модели данных).

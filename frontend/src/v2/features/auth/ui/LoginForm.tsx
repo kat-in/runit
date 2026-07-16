@@ -11,11 +11,9 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
-import { useAuthModal } from '../model/authModal';
+import { useAuthModal, validateEmail, validatePassword, titles } from '..';
 import { useSession } from '../../../entities/user';
 import FormHeader from './FormHeader';
-import { validateEmail, validatePassword } from '../lib/validate';
-import { titles } from '../lib/constants';
 
 export default function LoginForm() {
   const { setMode, close } = useAuthModal();

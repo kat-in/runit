@@ -4,8 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { notifications } from '@mantine/notifications';
 
 import { useTRPCClient } from '../../../shared/api';
-import { deleteSnippet } from '../api/deleteSnippet';
-import { createExampleSnippet } from '../api/createExampleSnippet';
+import { deleteSnippet, createExampleSnippet } from '..';
 import { SNIPPETS_QUERY_KEY } from '../../../entities/snippet';
 
 /** Хук управления выделением, удалением и созданием сниппетов через пример. */

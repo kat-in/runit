@@ -16,13 +16,13 @@ import {
   FILE_NAME_BY_LANGUAGE,
   STARTER_CODE,
   SAVE_STATUS_META,
-} from '../lib/constants';
+  useSnippetSave,
+} from '..';
 import EditorHeader from './EditorHeader';
 import EditorSidebar from './EditorSidebar';
 import EditorStatusBar from './EditorStatusBar';
 import { useRunner } from '../../../features/run-code';
 import { useSnippetById, generateSnippetName } from '../../../entities/snippet';
-import { useSnippetSave } from '../model';
 import { useUserById } from '../../../entities/user';
 
 // Экран редактора Runit v2 (docs/design/editor.png).

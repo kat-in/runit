@@ -9,7 +9,7 @@ import { useState } from 'react';import {
   TextInput,
   Textarea,
 } from '@mantine/core';
-import { initialsOf } from '../../../shared/lib/initialsOf';
+import { initialsOf } from '../../../shared/lib';
 import { useSession } from '../../../entities/user';
 
 /** Вкладка «Профиль»: аватар, имя, username, био. */

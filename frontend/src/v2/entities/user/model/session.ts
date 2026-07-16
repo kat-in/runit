@@ -2,7 +2,7 @@ import {
   createContext,
   useContext,
 } from 'react';
-import type { SessionContextValue } from '../types';
+import type { SessionContextValue } from '..';
 
 export const SessionContext = createContext<SessionContextValue | null>(null);
 

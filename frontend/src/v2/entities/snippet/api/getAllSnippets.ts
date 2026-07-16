@@ -1,5 +1,5 @@
-import type { TrpcClient } from '../../../shared/api/trpc';
-import type { Snippet } from '../types';
+import type { TrpcClient } from '../../../shared/api';
+import type { Snippet } from '..';
 
 /** Загружает все сниппеты с бэкенда. */
 export const getAllSnippets = (trpc: TrpcClient) =>

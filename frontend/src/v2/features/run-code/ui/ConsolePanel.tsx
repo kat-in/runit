@@ -3,7 +3,7 @@ import { editorColors } from '../../../shared/theme';
 import type { ConsoleLine } from '../../../shared/runner';
 import { IconTrash } from '../../../shared/ui';
 import TabButton from './TabButton';
-import { type ConsolePanelProps } from '../types'
+import { type ConsolePanelProps } from '..'
 
 const lineColor: Record<ConsoleLine['type'], string> = {
   log: editorColors.text,

@@ -11,7 +11,7 @@ import {
 import { useSession } from '../../entities/user';
 import { useAuthModal } from '../../features/auth';
 import { RunitLogo } from '../../shared/ui'
-import { initialsOf } from '../../shared/lib/initialsOf'
+import { initialsOf } from '../../shared/lib'
 
 // TODO: провести рефакторинг архитектуры (выделить в отдельную таску)
 /** Компонент шапки сайта с логотипом, навигацией и меню пользователя. */

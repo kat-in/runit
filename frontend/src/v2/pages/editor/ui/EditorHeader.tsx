@@ -11,7 +11,7 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { RunitLogo } from '../../../shared/ui';
-import { initialsOf } from '../../../shared/lib/initialsOf';
+import { initialsOf } from '../../../shared/lib';
 import {
   IconArrowLeft,
   IconHistory,
@@ -22,7 +22,7 @@ import {
 
 import { useAuthModal } from '../../../features/auth';
 import { useSession } from '../../../entities/user';
-import { type Meta } from '../types'
+import { type Meta } from '..'
 
 export type EditorHeaderProps = {
     setName: (name: string) => void,

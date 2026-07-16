@@ -16,9 +16,7 @@ import {
 import { IconDice5 } from '@tabler/icons-react';
 import { langMeta } from '../../../shared/theme';
 import FieldLabel from './FieldLabel';
-import { VISIBILITY_HINTS } from '../lib/constants'
-import { type Props } from '../types'
-import useCreateSnippet from '../model/useCreateSnippet';
+import { VISIBILITY_HINTS, type Props, useCreateSnippet } from '..';
 
 /** Модальное окно создания нового сниппета с выбором языка, видимости и генерацией названия. */
 export default function NewSnippetModal({ opened, onClose }: Props) {

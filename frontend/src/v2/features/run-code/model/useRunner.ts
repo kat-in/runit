@@ -5,7 +5,7 @@ import {
   useState,
 } from 'react';
 import { runJavaScript, unsupportedLanguage, type ConsoleLine } from '../../../shared/runner';
-import { type OutputTab } from '../types';
+import { type OutputTab } from '..';
 
 /**
  * Хук управления запуском кода и состоянием консоли.

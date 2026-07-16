@@ -1,4 +1,4 @@
-import type { TrpcClient } from '../../../shared/api/trpc';
+import type { TrpcClient } from '../../../shared/api';
 
 /** Создаёт нового пользователя. */
 export const createUser = (

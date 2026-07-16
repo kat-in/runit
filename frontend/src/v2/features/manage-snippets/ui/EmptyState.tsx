@@ -1,8 +1,7 @@
 import { Box, Button, Group, Paper, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import { langMeta } from '../../../shared/theme';
 import { sampleCode } from '../../../entities/snippet';
-import { type EmptyStateProps } from '../types'
-import { EXAMPLE_LANGS } from '../lib/constants'
+import { type EmptyStateProps, EXAMPLE_LANGS } from '..'
 
 /** Пустое состояние дашборда: предложение создать сниппет или выбрать пример. */
 export default function EmptyState({ onCreateClick, onCreateExample, creating }: EmptyStateProps) {

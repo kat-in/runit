@@ -8,10 +8,8 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
-import { useAuthModal } from '../model/authModal';
+import { useAuthModal, validateEmail, titles } from '..';
 import FormHeader from './FormHeader';
-import { validateEmail } from '../lib/validate';
-import { titles } from '../lib/constants';
 
 function ResetForm() {
   const { setMode, close } = useAuthModal();

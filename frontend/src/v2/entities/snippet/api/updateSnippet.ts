@@ -1,4 +1,4 @@
-import type { TrpcClient } from '../../../shared/api/trpc';
+import type { TrpcClient } from '../../../shared/api';
 
 // TODO: бэкенд возвращает `language: string`, а useMutation ожидает строгие типы.
 // Временное решение: language as 'ruby' | 'java' | ...,
